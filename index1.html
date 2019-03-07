@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>before</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+	<style>
+		body{
+			margin: 5%;
+		}
+		#table{
+			width: 80%;
+			margin: 5% auto;
+			display: flex;
+			flex-direction: column;
+			background-color: azure;
+		}
+		img{
+			height: 150px;
+			width: auto;
+		}
+		.row{
+			display: flex;
+			width: 100%;
+			font-size: 18px;
+			font-weight: bold;
+			cursor: pointer;
+			border: 1px solid #e2e2e2;
+			border-width: 1px;
+			
+		}
+		.row:hover{
+			transform: scale(1.1);
+		}
+		.clicked{
+			background-color:lightpink;
+		}
+		
+		.cell{
+			width: 50%;
+			height: 25%;
+			padding: 10px;
+			text-align: center;
+			cursor: pointer;
+		}
+		
+		.btn {
+			margin: 30px auto;
+			margin-left: 43%;
+			width: 160px;
+			text-align: center;
+			align-content: center;
+			height: 50px;
+			border-radius: 20px;
+			font-size: 20px;
+			font-family: cursive;
+			color: black;
+			text-transform: uppercase;
+			position: relative;
+			background: azure;
+			cursor: pointer;
+
+		}
+		.btn:focus {
+			outline: none;
+		}
+
+		.btn:before {
+			content: '';
+			display: block;
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top: 0;
+			left: 0;
+			opacity: 0.5;
+			transform: scale(0.5);
+			border-radius: 20px;
+			transition: transform 0.3 s ease-in,
+				box-shadow 0.2s ease-in 0.25s;
+		}
+
+		.btn:hover:before {
+			transform: scale(1.5);
+			box-shadow: 5px 10px 20px rgba(0,0,0,0.3), -5px -10px 20px rgba(255,255,255,0.5);
+		}
+
+	</style>
+</head>
+<body>
+	
+	<section id="table">
+	</section>
+	<button id="sbmt" class="btn">Submit</button>
+	
+<script>
+	
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', 'test.json');
+	xhr.send();
+
+	xhr.onreadystatechange = function(){
+		if(xhr.readyState == 4){
+			if(xhr.status == 200){
+				var data = JSON.parse(xhr.responseText);
+				buildTable(data);
+				buildUI();
+			}
+			else{
+				console.error('Smth went wrong');
+			}
+		}
+	}
+
+	var table = document.getElementById('table');
+	function buildTable(data){
+		for(var i = 0; i < data.length; i++){
+			var row = document.createElement('div');
+			row.classList.add('row');
+			
+			var cell = document.createElement('div');
+			cell.classList.add('cell');
+			cell.innerText = data[i].name;
+			row.appendChild(cell);
+			
+			var cell2 = document.createElement('div');
+			cell2.classList.add('cell');
+			row.appendChild(cell2);
+			
+			var img1 = document.createElement("img");
+			img1.setAttribute("src", data[i].imageUrl);
+			img1.setAttribute("alt", data[i].name);
+			cell2.appendChild(img1);
+			row.id = data[i].id;
+			table.appendChild(row);
+		}
+	}
+	
+	function buildUI(){
+		var rows = document.getElementsByClassName('row');
+		Array.prototype.forEach.call(rows, function(row){
+			row.addEventListener('click', function(){
+			row.classList.add('clicked');
+			});
+		});
+	}
+	
+	var submit = document.getElementById('sbmt');
+	submit.onclick = function(){
+		var clickedElts = document.querySelectorAll('.clicked');
+		console.log(clickedElts);
+		for (var i = 0; i < clickedElts.length; i++) {
+			var g = clickedElts[i].id;
+			alert(g);
+		}
+	}
+		
+</script>
+
+</body>
+</html>
